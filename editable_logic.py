@@ -2,17 +2,17 @@
 """可從一般 Python 程式呼叫的調校計算介面。"""
 from __future__ import annotations
 
-from typing import Any
-from recovered_runtime import load_runtime
+from fh6_core import TuneInput, calculate_tune, default_gear_ratios
 
 
-def calc_tune(*args: Any, **kwargs: Any) -> dict[str, Any]:
-    return load_runtime()["calc_tune"](*args, **kwargs)
-
-
-def default_gear_ratios(n: int, goal: str = "balance") -> list[float]:
-    return load_runtime()["default_gear_ratios"](n, goal)
+def calc_tune(**kwargs):
+    """使用關鍵字參數建立 TuneInput 並回傳建議調校。"""
+    return calculate_tune(TuneInput(**kwargs))
 
 
 def corner_intent_strength(pct: float) -> float:
-    return load_runtime()["corner_intent_strength"](pct)
+    """將 0～100 的轉向偏好正規化為 0～1。"""
+    return max(0.0, min(100.0, float(pct))) / 100.0
+
+
+__all__ = ["TuneInput", "calculate_tune", "calc_tune", "default_gear_ratios", "corner_intent_strength"]
